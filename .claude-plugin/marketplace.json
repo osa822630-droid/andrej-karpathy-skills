@@ -1,29 +1,23 @@
 {
   "name": "karpathy-skills",
-  "id": "karpathy-skills",
+  "description": "Karpathy-inspired behavioral guidelines as Claude plugins for claude.ai (web), Cowork, and Claude Code.",
   "owner": {
-    "name": "forrestchang"
-  },
-  "metadata": {
-    "description": "Behavioral guidelines to reduce common LLM coding mistakes, derived from Andrej Karpathy's observations",
-    "version": "1.0.0"
+    "name": "osa822630-droid",
+    "url": "https://github.com/osa822630-droid"
   },
   "plugins": [
     {
       "name": "andrej-karpathy-skills",
-      "source": "./",
-      "description": "Behavioral guidelines to reduce common LLM coding mistakes: Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven Execution",
-      "version": "1.0.0",
-      "author": {
-        "name": "forrestchang"
-      },
-      "keywords": [
+      "displayName": "Karpathy Guidelines",
+      "description": "Four behavioral guidelines that reduce common LLM coding mistakes: Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven Execution.",
+      "source": "./plugins/andrej-karpathy-skills",
+      "category": "workflow",
+      "tags": [
         "guidelines",
         "best-practices",
         "coding",
         "karpathy"
-      ],
-      "category": "workflow"
+      ]
     }
   ]
 }

@@ -4,7 +4,9 @@
 >
 > 在 X 上关注我：[https://x.com/jiayuan_jy](https://x.com/jiayuan_jy)
 
-一个单一的 `CLAUDE.md` 文件，用于改善 Claude Code 的行为，源自 [Andrej Karpathy 的观察](https://x.com/karpathy/status/2015883857489522876) 关于 LLM 编码陷阱的总结。
+一个单一的 `CLAUDE.md` 文件，用于改善 Claude 的行为，源自 [Andrej Karpathy 的观察](https://x.com/karpathy/status/2015883857489522876) 关于 LLM 编码陷阱的总结。
+
+本仓库是 [multica-ai/andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills) 的分支，已整理为 Claude 插件市场，可在 Claude 网页版通过「Add marketplace」直接添加。
 
 [English](./README.md) | 简体中文
 
@@ -98,32 +100,51 @@ LLM 经常默默选择一种解释然后执行。这个原则强制明确推理�
 
 ## 安装
 
-**选项 A：Claude Code 插件（推荐）**
+要添加的插件市场是 **`osa822630-droid/andrej-karpathy-skills`**，其中包含一个插件 **Karpathy Guidelines**（`andrej-karpathy-skills`）。
 
-在 Claude Code 中，首先添加插件市场：
+**选项 A：Claude 网页版 claude.ai（推荐，免费账户也可添加市场）**
+
+1. 打开 [claude.ai](https://claude.ai) → 左侧 **Customize** → **Plugins**。
+2. 选择 **Add → Add marketplace → Add from a repository**。
+3. 填入 `osa822630-droid/andrej-karpathy-skills`（或完整的仓库 URL）并确认 **Sync**；Claude 会读取默认分支 `main` 上的 `.claude-plugin/marketplace.json`。
+4. 在 **Discover** 中找到 **Karpathy Guidelines**，点击 **Add**。
+5. 在对话里点 `+` 或输入 `/` 即可看到 `karpathy-guidelines` 技能。
+
+> 注意：根据 Anthropic 文档，插件的**安装/使用**可能需要 Pro、Max、Team 或 Enterprise 套餐；如果无法安装插件，请使用选项 C。
+
+**选项 B：Claude Code（终端）**
+
 ```
-/plugin marketplace add forrestchang/andrej-karpathy-skills
+claude plugin marketplace add osa822630-droid/andrej-karpathy-skills
+claude plugin install andrej-karpathy-skills@karpathy-skills
 ```
 
-然后安装插件：
-```
-/plugin install andrej-karpathy-skills@karpathy-skills
-```
+在会话内也可以用 `/plugin marketplace add ...` 和 `/plugin install andrej-karpathy-skills@karpathy-skills`。如果之前添加过上游的同名市场，请先执行 `claude plugin marketplace remove karpathy-skills`。
 
-这会将指南安装为 Claude Code 插件，使其在你所有项目中可用。
-
-**选项 B：CLAUDE.md（按项目）**
+**选项 C：CLAUDE.md（按项目，无需插件）**
 
 新项目：
 ```bash
-curl -o CLAUDE.md https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/CLAUDE.md
+curl -o CLAUDE.md https://raw.githubusercontent.com/osa822630-droid/andrej-karpathy-skills/main/CLAUDE.md
 ```
 
 已有项目（追加）：
 ```bash
 echo "" >> CLAUDE.md
-curl https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/CLAUDE.md >> CLAUDE.md
+curl https://raw.githubusercontent.com/osa822630-droid/andrej-karpathy-skills/main/CLAUDE.md >> CLAUDE.md
 ```
+
+## 插件市场结构
+
+```
+.claude-plugin/marketplace.json                 # 「Add marketplace」读取的目录
+plugins/andrej-karpathy-skills/                 # 插件目录
+├── .claude-plugin/plugin.json                 # 插件清单
+├── README.md                                 # 插件说明
+└── skills/karpathy-guidelines/SKILL.md        # 技能
+```
+
+claude.ai 只同步带有独立 `plugin.json` 的插件目录，因此插件放在 `plugins/…` 下；`CLAUDE.md`、Cursor 规则和文档保留在仓库根目录，不会随插件一起分发。若出现 **Failed to add marketplace**，请先删除之前添加的同名仓库市场（claude.ai 用仓库名而不是 `marketplace.json` 里的名字作为市场名），并确认仓库为公开、清单位于默认分支。
 
 ## 在 Cursor 中使用
 

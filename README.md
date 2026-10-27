@@ -1,10 +1,12 @@
-# Karpathy-Inspired Claude Code Guidelines
+# Karpathy-Inspired Claude Guidelines
 
 > Check out my new project [Multica](https://github.com/multica-ai/multica) — an open-source platform for running and managing coding agents with reusable skills.
 >
 > Follow me on X: [https://x.com/jiayuan_jy](https://x.com/jiayuan_jy)
 
-A single `CLAUDE.md` file to improve Claude Code behavior, derived from [Andrej Karpathy's observations](https://x.com/karpathy/status/2015883857489522876) on LLM coding pitfalls.
+Four principles you can use as a `CLAUDE.md` file, a Cursor rule, or an installable Claude plugin for claude.ai (web), Cowork, and Claude Code — derived from [Andrej Karpathy's observations](https://x.com/karpathy/status/2015883857489522876) on LLM coding pitfalls.
+
+This repository is a fork of [multica-ai/andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills) (formerly `forrestchang/...`) that is laid out as a **Claude plugin marketplace**, so it can be added from the Claude web UI with **Add marketplace**.
 
 English | [简体中文](./README.zh.md)
 
@@ -98,32 +100,61 @@ Strong success criteria let the LLM loop independently. Weak criteria ("make it 
 
 ## Install
 
-**Option A: Claude Code Plugin (recommended)**
+The marketplace to add is **`osa822630-droid/andrej-karpathy-skills`**. It publishes one plugin, **Karpathy Guidelines** (`andrej-karpathy-skills`), containing the `karpathy-guidelines` skill.
 
-From within Claude Code, first add the marketplace:
+### Option A (recommended): Claude on the web — claude.ai
+
+1. Go to [claude.ai](https://claude.ai) → **Customize** (left sidebar) → **Plugins**.
+2. Choose **Add → Add marketplace → Add from a repository**.
+3. Paste `osa822630-droid/andrej-karpathy-skills` (or `https://github.com/osa822630-droid/andrej-karpathy-skills`) and confirm / **Sync**. Claude reads `.claude-plugin/marketplace.json` from the default branch (`main`).
+4. Open **Discover**, find **Karpathy Guidelines**, and click **Add**.
+5. In a chat, open `+` or type `/` to see `karpathy-guidelines`; Claude also loads it automatically for coding work.
+
+**Add marketplace** is available from the free Claude web UI. Anthropic lists plugin *installation* as a Pro, Max, Team, or Enterprise feature, so if your account cannot add the plugin itself, use **Option C** below — it needs no plan.
+
+**بالعربية:** افتح claude.ai → Customize → Plugins → Add → Add marketplace → Add from a repository → اكتب `osa822630-droid/andrej-karpathy-skills` → Sync → وبعدين من Discover اضغط Add جنب Karpathy Guidelines.
+
+### Option B: Claude Code (terminal)
+
 ```
-/plugin marketplace add forrestchang/andrej-karpathy-skills
+claude plugin marketplace add osa822630-droid/andrej-karpathy-skills
+claude plugin install andrej-karpathy-skills@karpathy-skills
 ```
 
-Then install the plugin:
-```
-/plugin install andrej-karpathy-skills@karpathy-skills
-```
+Inside a session the same steps are `/plugin marketplace add osa822630-droid/andrej-karpathy-skills` and `/plugin install andrej-karpathy-skills@karpathy-skills`. If you already added the upstream marketplace, remove it first (`claude plugin marketplace remove karpathy-skills`), because only one marketplace per name can be registered.
 
-This installs the guidelines as a Claude Code plugin, making the skill available across all your projects.
-
-**Option B: CLAUDE.md (per-project)**
+### Option C: CLAUDE.md (per-project, no plugin needed)
 
 New project:
 ```bash
-curl -o CLAUDE.md https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/CLAUDE.md
+curl -o CLAUDE.md https://raw.githubusercontent.com/osa822630-droid/andrej-karpathy-skills/main/CLAUDE.md
 ```
 
 Existing project (append):
 ```bash
 echo "" >> CLAUDE.md
-curl https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/CLAUDE.md >> CLAUDE.md
+curl https://raw.githubusercontent.com/osa822630-droid/andrej-karpathy-skills/main/CLAUDE.md >> CLAUDE.md
 ```
+
+### Marketplace layout
+
+```
+.claude-plugin/marketplace.json                 # catalog read by "Add marketplace"
+plugins/andrej-karpathy-skills/                 # the plugin folder (one folder = one plugin)
+├── .claude-plugin/plugin.json                 # plugin manifest
+├── README.md                                 # plugin description
+└── skills/karpathy-guidelines/SKILL.md        # the skill
+```
+
+claude.ai validates every catalog entry on its servers, so each entry points at a real plugin folder with its own `plugin.json` and a relative `./…` source. Keeping the plugin under `plugins/…` is the layout Anthropic's own marketplaces use; `CLAUDE.md`, the Cursor rule, and the docs stay at the repository root and are not shipped with the plugin.
+
+### Troubleshooting "Failed to add marketplace"
+
+- **Name collision:** claude.ai derives a marketplace's name from the *repository* name, not from `marketplace.json`. If you already added `forrestchang/andrej-karpathy-skills` or `multica-ai/andrej-karpathy-skills`, adding this fork (same repo name) fails with a generic error. Remove the old marketplace from **Customize → Plugins** first, then add this one.
+- **"Sync failed, check the repository URL":** the repository must be **public**, and `.claude-plugin/marketplace.json` must be on the **default branch**. After a push, open the marketplace page and use **Check for updates** (or turn on **Sync automatically**).
+- **Wrong input:** the dialog accepts a repository URL or `owner/repo` — not a link to a single file or a ZIP.
+- **Plugin not listed:** look under **Discover** for "Karpathy Guidelines"; the catalog entry is named `andrej-karpathy-skills`.
+- **Plan limits:** adding a marketplace works from the free web UI; installing or using plugins may require a paid plan according to Anthropic's docs. Use Option C if your plan blocks the install.
 
 ## Using with Cursor
 
